@@ -16,19 +16,19 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
 
 <dl class="details">
     <?js if (data.description) {?>
-    <dt class="tag-description">Description:</dt>
+    <dt class="tag-description">描述:</dt>
     <dd class="tag-description"><ul class="dummy"><li><?js= data.description ?></li></ul></dd>
     <?js } ?>
 
     <?js if (data.meta && self.outputSourceFiles) {?>
-    <dt class="tag-source">Source:</dt>
+    <dt class="tag-source">源码:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <?js= self.linkto(meta.shortpath) ?>, <?js= self.linkto(meta.shortpath, 'line ' + meta.lineno, null, 'line' + meta.lineno) ?>
     </li></ul></dd>
     <?js } ?>
 
     <?js if (data.version) {?>
-    <dt class="tag-version">Version:</dt>
+    <dt class="tag-version">版本:</dt>
     <dd class="tag-version"><ul class="dummy"><li><?js= version ?></li></ul></dd>
     <?js } ?>
 
@@ -106,14 +106,14 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
     <?js } ?>
 
     <?js if (data.defaultvalue) {?>
-    <dt class="tag-default">Default Value:</dt>
+    <dt class="tag-default">默认值:</dt>
     <dd class="tag-default"><ul class="dummy">
             <li<?js= defaultObjectClass ?>><?js= data.defaultvalue ?></li>
         </ul></dd>
     <?js } ?>
 
     <?js if (data.tutorials && tutorials.length) {?>
-    <dt class="tag-tutorial">Tutorials:</dt>
+    <dt class="tag-tutorial">教程:</dt>
     <dd class="tag-tutorial">
         <ul><?js tutorials.forEach(function(t) { ?>
             <li><?js= self.tutoriallink(t) ?></li>
@@ -145,7 +145,7 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
     if (properties && properties.length && properties.forEach) {
 ?>
 
-    <h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">属性:</h5>
 
     <?js= this.partial('properties.tmpl', data) ?>
 

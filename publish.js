@@ -388,11 +388,11 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                         // Not certain if there is a situation where this is needed anymore
                         // linkto method seems to solve this problem already, but at least this check
                         // will prevent duplicate #'s in links.
-                        if (!navItemLink.includes("#." + method.name)) {
-                            var strNewLink = '.html#.' + method.name;
+                        // if (!navItemLink.includes("#." + method.name)) {
+                        //     var strNewLink = '.html#.' + method.name;
 
-                            navItemLink = navItemLink.replace(".html", strNewLink);
-                        }
+                        //     navItemLink = navItemLink.replace(".html", strNewLink);
+                        // }
 
                         navItem += "<li data-type='method'";
                         if(docdash.collapse)
@@ -496,14 +496,14 @@ function buildNav(members) {
     ];
     var order = docdash.sectionOrder || defaultOrder;
     var sections = {
-        Classes: buildMemberNav(members.classes, 'Classes', seen, linkto),
-        Modules: buildMemberNav(members.modules, 'Modules', {}, linkto),
-        Externals: buildMemberNav(members.externals, 'Externals', seen, linktoExternal),
-        Events: buildMemberNav(members.events, 'Events', seen, linkto),
-        Namespaces: buildMemberNav(members.namespaces, 'Namespaces', seen, linkto),
+        Classes: buildMemberNav(members.classes, '类', seen, linkto),
+        Modules: buildMemberNav(members.modules, '模块', {}, linkto),
+        Externals: buildMemberNav(members.externals, '扩展', seen, linktoExternal),
+        Events: buildMemberNav(members.events, '事件', seen, linkto),
+        Namespaces: buildMemberNav(members.namespaces, '命名空间', seen, linkto),
         Mixins: buildMemberNav(members.mixins, 'Mixins', seen, linkto),
-        Tutorials: buildMemberNav(members.tutorials, 'Tutorials', seenTutorials, linktoTutorial),
-        Interfaces: buildMemberNav(members.interfaces, 'Interfaces', seen, linkto),
+        Tutorials: buildMemberNav(members.tutorials, '教程', seenTutorials, linktoTutorial),
+        Interfaces: buildMemberNav(members.interfaces, '接口', seen, linkto),
         Global: buildMemberNavGlobal()
     };
     order.forEach(member => nav += sections[member]);
