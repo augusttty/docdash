@@ -13,7 +13,7 @@ See http://clenemt.github.io/docdash/ for a sample demo. :rocket:
 ## Install
 
 ```bash
-$ npm install docdash
+$ npm install docdash-cn
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ In your `jsdoc.json` file, add a template option.
 
 ```json
 "opts": {
-  "template": "node_modules/docdash"
+  "template": "node_modules/docdash-cn"
 }
 ```
 
@@ -57,7 +57,7 @@ See the config file for the [fixtures](fixtures/fixtures.conf.json) or the sampl
         "plugins/markdown"
     ],
     "opts": {
-        "template": "assets/template/docdash/",
+        "template": "assets/template/docdash-cn/",
         "encoding": "utf8",
         "destination": "docs/",
         "recurse": true,
