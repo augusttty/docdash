@@ -449,7 +449,7 @@ function linktoExternal(longName, name) {
  */
 
 function buildNav(members) {
-    var nav = '<h2><a href="index.html">Home</a></h2>';
+    var nav = '<h2><a href="index.html">介绍</a></h2>';
     var seen = {};
     var seenTutorials = {};
     var docdash = env && env.conf && env.conf.docdash || {};
@@ -482,10 +482,10 @@ function buildNav(members) {
             }
             else {
                 if(docdash.collapse === "top") {
-                    ret += '<h3 class="collapsed_header">Global</h3><ul class="collapse_top">' + globalNav + '</ul>';
+                    ret += '<h3 class="collapsed_header">全局对象</h3><ul class="collapse_top">' + globalNav + '</ul>';
                 }
                 else {
-                    ret += '<h3>Global</h3><ul>' + globalNav + '</ul>';
+                    ret += '<h3>全局对象</h3><ul>' + globalNav + '</ul>';
                 }
             }
         }
