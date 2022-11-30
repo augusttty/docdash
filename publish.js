@@ -323,22 +323,22 @@ function attachModuleSymbols(doclets, modules) {
 }
 
 function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
-    var nav = '';
-
+    // var nav = '';
+    var navs = [];
     if (items && items.length) {
-        var itemsNav = '';
+        // var itemsNav = '';
         var docdash = env && env.conf && env.conf.docdash || {};
         var level = typeof docdash.navLevel === 'number' && docdash.navLevel >= 0 ?
             docdash.navLevel :
             Infinity;
-
         items.forEach(function(item) {
+            var itemsNav = '';
             var displayName;
             var methods = find({kind:'function', memberof: item.longname});
             var members = find({kind:'member', memberof: item.longname});
             var conf = env && env.conf || {};
             var classes = '';
-
+            var category = item.category || null;
             // show private class?
             if (docdash.private === false && item.access === 'private') return;
 
@@ -410,19 +410,20 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                 itemsSeen[item.longname] = true;
             }
             itemsNav += '</li>';
+            navs.push({value: itemsNav, category: category, itemHeading: itemHeading});
         });
 
-        if (itemsNav !== '') {
-            if(docdash.collapse === "top") {
-                nav += '<h3 class="collapsed_header">' + itemHeading + '</h3><ul class="collapse_top">' + itemsNav + '</ul>';
-            }
-            else {
-                nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
-            }
-        }
+        // if (itemsNav !== '') {
+        //     if(docdash.collapse === "top") {
+        //         nav += '<h3 class="collapsed_header">' + itemHeading + '</h3><ul class="collapse_top">' + itemsNav + '</ul>';
+        //     }
+        //     else {
+        //         nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
+        //     }
+        // }
     }
 
-    return nav;
+    return {navs,title: itemHeading};
 }
 
 function linktoTutorial(longName, name) {
@@ -453,14 +454,33 @@ function buildNav(members) {
     var seen = {};
     var seenTutorials = {};
     var docdash = env && env.conf && env.conf.docdash || {};
+    var defaultOrder = [
+        'Classes', 'Modules', 'Externals', 'Events', 'Namespaces', 'Mixins', 'Tutorials', 'Interfaces', 'Global'
+    ];
+    var categories = [];
+    var categoriesMap = {};
     if(docdash.menu){
         for(var menu in docdash.menu){
-            nav += '<h2><a ';
-            //add attributes
-            for(var attr in docdash.menu[menu]){
-                nav += attr+'="' + docdash.menu[menu][attr] + '" ';
+            let item = docdash.menu[menu];
+            if(item.type == 'category'){
+                // nav += '<h3>' + menu + '</h3><ul>';
+                // nav += '</ul>';
+                let cat = {
+                    menu: menu,
+                    category: item.id,
+                    items: []
+                }
+                categoriesMap[item.id] = cat;
+                categories.push(cat);
+            }else{
+                nav += '<h2><a ';
+                //add attributes
+                for(var attr in docdash.menu[menu]){
+                    nav += attr+'="' + docdash.menu[menu][attr] + '" ';
+                }
+                nav += '>' + menu + '</a></h2>';
             }
-            nav += '>' + menu + '</a></h2>';
+          
         }
     }
 
@@ -482,18 +502,16 @@ function buildNav(members) {
             }
             else {
                 if(docdash.collapse === "top") {
-                    ret += '<h3 class="collapsed_header">全局对象</h3><ul class="collapse_top">' + globalNav + '</ul>';
+                    ret += '<h3 class="collapsed_header">全局对象(类型定义)</h3><ul class="collapse_top">' + globalNav + '</ul>';
                 }
                 else {
-                    ret += '<h3>全局对象</h3><ul>' + globalNav + '</ul>';
+                    ret += '<h3>全局对象(类型定义)</h3><ul>' + globalNav + '</ul>';
                 }
             }
         }
         return ret;
     }
-    var defaultOrder = [
-        'Classes', 'Modules', 'Externals', 'Events', 'Namespaces', 'Mixins', 'Tutorials', 'Interfaces', 'Global'
-    ];
+ 
     var order = docdash.sectionOrder || defaultOrder;
     var sections = {
         Classes: buildMemberNav(members.classes, '类', seen, linkto),
@@ -506,7 +524,46 @@ function buildNav(members) {
         Interfaces: buildMemberNav(members.interfaces, '接口', seen, linkto),
         Global: buildMemberNavGlobal()
     };
-    order.forEach(member => nav += sections[member]);
+       // if (itemsNav !== '') {
+        //     if(docdash.collapse === "top") {
+        //         nav += '<h3 class="collapsed_header">' + itemHeading + '</h3><ul class="collapse_top">' + itemsNav + '</ul>';
+        //     }
+        //     else {
+        //         nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
+        //     }
+        // }
+    let defaultNavs = '';
+    order.forEach(member => {
+        let result = sections[member];
+        if(member == 'Global'){
+            defaultNavs += result;
+            return;
+        }
+        let data = result.navs;
+        let title = result.title;
+        let itemNavs = '';
+        if(!data || data.length == 0) return;
+        for(let i = 0; i < data.length; i++){
+            let item = data[i];
+            if(categoriesMap[item.category]){
+                categoriesMap[item.category].items.push(item.value);
+            }else{
+                itemNavs += item.value;
+            }
+        }
+        if(!itemNavs) return;
+        if(docdash.collapse === 'top'){
+            defaultNavs += '<h3 class="collapsed_header">' + title + '</h3><ul class="collapse_top">' + itemNavs + '</ul>';
+        }else{
+            defaultNavs += '<h3>' + title + '</h3><ul>' + itemNavs + '</ul>';
+        }
+    })
+    categories.forEach(cat => {
+        nav += '<h3>' + cat.menu + '</h3><ul>' + cat.items.join('') + '</ul>';
+    })
+    nav += defaultNavs;
+
+    // order.forEach(member => nav += sections[member]);
 
     return nav;
 }
