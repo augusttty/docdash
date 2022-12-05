@@ -339,6 +339,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
             var conf = env && env.conf || {};
             var classes = '';
             var category = item.category || null;
+            var index = item.index || null;
             // show private class?
             if (docdash.private === false && item.access === 'private') return;
 
@@ -410,7 +411,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                 itemsSeen[item.longname] = true;
             }
             itemsNav += '</li>';
-            navs.push({value: itemsNav, category: category, itemHeading: itemHeading});
+            navs.push({value: itemsNav, category: category, index:index, itemHeading: itemHeading});
         });
 
         // if (itemsNav !== '') {
@@ -546,7 +547,11 @@ function buildNav(members) {
         for(let i = 0; i < data.length; i++){
             let item = data[i];
             if(categoriesMap[item.category]){
-                categoriesMap[item.category].items.push(item.value);
+                if(item.index != undefined && item.index != null){
+                    categoriesMap[item.category].items.splice(item.index,0,item.value);
+                }else{
+                    categoriesMap[item.category].items.push(item.value);
+                }
             }else{
                 itemNavs += item.value;
             }
@@ -814,7 +819,7 @@ exports.publish = function(taffyData, opts, tutorials) {
     var files = find({kind: 'file'});
     var packages = find({kind: 'package'});
 
-    generate('', 'Home',
+    generate('', '介绍',
         packages.concat(
             [{kind: 'mainpage', readme: opts.readme, longname: (opts.mainpagetitle) ? opts.mainpagetitle : 'Main Page'}]
         ).concat(files),
